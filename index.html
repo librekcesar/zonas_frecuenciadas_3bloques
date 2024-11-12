@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="leaflet-search-master/leaflet-search-master/src/leaflet-search.css" /><!--receurda siempre llamar en este orden a las librearías del buscador-->
+    <script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
+    <script src="leaflet-search-master/leaflet-search-master/src/leaflet-search.js"></script>
+    <script type="text/javascript" src="poligonos_zonas_frecuenciadas_tres_bloques.js"></script>
+
+<!--<link rel="stylesheet" href="https://librekcesar.github.io/busca_zipcodes4/leaflet-search-master/leaflet-search-master/src/leaflet-search.css" />
+    <script src="https://librekcesar.github.io/busca_zipcodes4/leaflet-search-master/leaflet-search-master/src/leaflet-search.js"></script>
+    -->
+
+
+
+    <style>
+        #map { 
+            width: 100%;
+            height: 900px;
+            box-shadow: 5px 5px 5px #888; 
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map("map").setView([19.475, -99.176], 11);
+        L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        function getColor(v73_cobertura_diferenciada) {
+            switch (v73_cobertura_diferenciada) {
+                case 'Sin ajuste ETA´S': return '#0aa938';
+                case 'F1XS': return '#e8e512';
+                case 'F2XS': return '#e88a12';
+                case 'F3XS': return '#c70e0e'; 
+                default: return '#00FF00';
+            }
+        }
+
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.v73_cobertura_diferenciada),
+                weight: 1,
+                opacity: 1,
+                color: 'black',
+                dashArray: '2',
+                fillOpacity: 0.5
+            };
+        }
+
+        function onEachFeature(feature, layer) {
+            if (feature.properties) {
+                layer.bindPopup('<p> Zonas frecuenciadas: ' + feature.properties.v73_cobertura_diferenciada + '</p><p>Estación: ' + feature.properties.station_code + '</p><p>Zonificación: ' + feature.properties.zonificacion + '</p>');
+            }
+        }
+
+        var layerGroup = L.geoJSON(zonas, {
+            style: style,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+
+    </script>    
+
+
+</body>
+
+
+</html>
+
